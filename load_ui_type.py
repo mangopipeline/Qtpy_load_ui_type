@@ -33,7 +33,7 @@ else:
 
             uic.compileUi(f, o, indent=0)
             pyc = compile(o.getvalue(), '<string>', 'exec')
-            exec pyc in frame
+            exec(pyc, frame)
 
             # Fetch the base_class and form class based on their type
             # in the xml from designer
