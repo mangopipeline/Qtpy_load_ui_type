@@ -4,7 +4,7 @@ is a helper lib that exposed the "loadUiType" method to both Qt4 and Qt5
 
  :example:
 
-    >>> from btools.utils.qt_hlp.uic import loadUiType
+    >>> from load_ui_type import loadUiType
     >>>
     >>> BASE,FORM = loadUiType(path_to_uic_file)
     >>>
