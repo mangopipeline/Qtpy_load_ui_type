@@ -1,3 +1,18 @@
+"""
+
+is a helper lib that exposed the "loadUiType" method to both Qt4 and Qt5
+
+ :example:
+
+    >>> from btools.utils.qt_hlp.uic import loadUiType
+    >>>
+    >>> BASE,FORM = loadUiType(path_to_uic_file)
+    >>>
+    >>> class MyQtApp(BASE,FORM):
+    >>>     def __init__(self,*args,**kwargs):
+    >>>         super(MyQtApp,self).__init__(*args,**kwargs)
+    >>>         self.setupUi(self)
+"""
 from Qt import IsPyQt4, IsPyQt5, IsPySide, IsPySide2, QtWidgets
 
 
@@ -11,10 +26,14 @@ else:
     if IsPySide:
         import pysideuic as uic
     else:
-        import pysideuic2 as uic
+        import pyside2uic as uic
 
     import xml.etree.ElementTree as xml
-    from cStringIO import StringIO
+
+    try:
+        from cStringIO import StringIO  # Python 2.7
+    except ModuleNotFoundError:
+        from io import StringIO  # Python 3.7
 
     def loadUiType(ui_file):
         """
@@ -28,11 +47,11 @@ else:
         form_class = parsed.find('class').text
 
         with open(ui_file, 'r') as f:
-            o = StringIO()
+            stringioval = StringIO()
             frame = {}
 
-            uic.compileUi(f, o, indent=0)
-            pyc = compile(o.getvalue(), '<string>', 'exec')
+            uic.compileUi(f, stringioval, indent=0)
+            pyc = compile(stringioval.getvalue(), '<string>', 'exec')
             exec(pyc, frame)
 
             # Fetch the base_class and form class based on their type
